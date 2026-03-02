@@ -1,0 +1,134 @@
+@startuml
+' Diagrama ER atualizado a partir do tables.sql — formato PlantUML válido
+' Arquivo: script-db/auto-car.plantuml
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+' Tabelas (entidades)
+entity "users" as users {
+  * id : char(36) <<PK>>
+  username : varchar(50) [not null, unique]
+  email : varchar(150) [not null, unique]
+  password_hash : varchar(255) [not null]
+  status : varchar(30)
+  email_verified_at : timestamp
+  last_login_at : timestamp
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "roles" as roles {
+  * id : char(36) <<PK>>
+  name : varchar(50) [not null, unique]
+  description : varchar(255)
+}
+
+entity "user_roles" as user_roles {
+  * user_id : char(36) <<FK users.id>>
+  * role_id : char(36) <<FK roles.id>>
+  created_at : timestamp
+}
+
+entity "person" as person {
+  * id : char(36) <<PK>>
+  user_id : char(36) <<FK users.id, unique>>
+  full_name : varchar(150)
+  cpf : varchar(14)
+  birth_date : date
+  created_at : timestamp
+}
+
+entity "company" as company {
+  * id : char(36) <<PK>>
+  legal_name : varchar(200)
+  trade_name : varchar(200)
+  cnpj : varchar(18)
+  status : varchar(30)
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "company_user" as company_user {
+  * company_id : char(36) <<FK company.id>>
+  * user_id : char(36) <<FK users.id>>
+  role : varchar(30)
+  created_at : timestamp
+}
+
+entity "contact" as contact {
+  * id : char(36) <<PK>>
+  owner_type : varchar(30)
+  user_id : char(36)
+  company_id : char(36)
+  contact_type : varchar(30)
+  value : varchar(150)
+  is_primary : boolean
+  created_at : timestamp
+}
+
+entity "address" as address {
+  * id : char(36) <<PK>>
+  owner_type : varchar(30)
+  user_id : char(36)
+  company_id : char(36)
+  zip_code : varchar(10)
+  street : varchar(150)
+  number : varchar(20)
+  complement : varchar(100)
+  district : varchar(100)
+  city : varchar(100)
+  state : varchar(2)
+  country : varchar(50)
+  created_at : timestamp
+}
+
+entity "seller_profile" as seller_profile {
+  * id : char(36) <<PK>>
+  seller_type : varchar(30)
+  user_id : char(36)
+  company_id : char(36)
+  rating : decimal(3,2)
+  total_ads : int
+  created_at : timestamp
+}
+
+' Relacionamentos (conformes constraints no SQL)
+users ||--o{ user_roles : "has"
+roles ||--o{ user_roles : "has"
+
+users ||--|| person : "1-to-1"
+
+company ||--o{ company_user : "has"
+users ||--o{ company_user : "has"
+
+users ||--o{ contact : "has"
+company ||--o{ contact : "has"
+
+users ||--o{ address : "has"
+company ||--o{ address : "has"
+
+users ||--o{ seller_profile : "has"
+company ||--o{ seller_profile : "has"
+
+' Observações sobre modelagem
+note bottom of contact
+  owner_type IN ('USER','COMPANY') e um CHECK no SQL garante
+  que exatamente uma das colunas (user_id OU company_id) esteja preenchida.
+end note
+
+note bottom of address
+  owner_type IN ('USER','COMPANY') e um CHECK no SQL garante
+  que exatamente uma das colunas (user_id OU company_id) esteja preenchida.
+end note
+
+note right of seller_profile
+  seller_type IN ('PERSON','COMPANY') e um CHECK no SQL garante
+  que exatamente uma das colunas (user_id OU company_id) esteja preenchida.
+end note
+
+' Ajuste visual
+hide circle
+
+@enduml

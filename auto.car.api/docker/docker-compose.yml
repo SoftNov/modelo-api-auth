@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: auto-car-db:local
+    build:
+      context: .
+    container_name: auto-car-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: pswdAutoCar@6678
+      MYSQL_DATABASE: db_auto_car
+      MYSQL_USER: auto_car_api_user
+      MYSQL_PASSWORD: autoCar@6678
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ../script-db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
