@@ -2,6 +2,8 @@ package com.auto.car.api.repository;
 
 import com.auto.car.api.enums.ParameterCategory;
 import com.auto.car.api.repository.entity.ParameterEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,5 +26,8 @@ public interface ParameterRepository extends JpaRepository<ParameterEntity, Stri
     List<ParameterEntity> findByIsEditableTrue();
 
     boolean existsByParamKey(String paramKey);
-}
 
+    Page<ParameterEntity> findByIsActiveTrue(Pageable pageable);
+
+    Page<ParameterEntity> findByCategoryAndIsActiveTrue(ParameterCategory category, Pageable pageable);
+}

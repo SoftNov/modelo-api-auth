@@ -2,6 +2,8 @@ package com.auto.car.api.service;
 
 import com.auto.car.api.dto.ParameterDto;
 import com.auto.car.api.enums.ParameterCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,21 @@ public interface ParameterService {
     List<ParameterDto> findByCategory(ParameterCategory category);
 
     /**
+     * Lista todos os parâmetros com paginação.
+     */
+    Page<ParameterDto> findAllPaged(Pageable pageable);
+
+    /**
+     * Lista todos os parâmetros ativos com paginação.
+     */
+    Page<ParameterDto> findAllActivePaged(Pageable pageable);
+
+    /**
+     * Lista parâmetros por categoria com paginação.
+     */
+    Page<ParameterDto> findByCategoryPaged(ParameterCategory category, Pageable pageable);
+
+    /**
      * Desativa um parâmetro.
      */
     void deactivate(String id);
@@ -61,4 +78,3 @@ public interface ParameterService {
      */
     void delete(String id);
 }
-

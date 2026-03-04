@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ContactDto {
-    @JsonIgnore
     private String id;
+
+    @JsonIgnore
     private OwnerType ownerType;
 
     @JsonIgnore
@@ -26,6 +27,7 @@ public class ContactDto {
     private ContactType contactType;
     private String value;
     private Boolean isPrimary;
+
+    @JsonIgnore
     private LocalDateTime createdAt;
 }
-

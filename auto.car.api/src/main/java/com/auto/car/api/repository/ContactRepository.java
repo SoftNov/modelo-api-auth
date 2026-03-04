@@ -27,5 +27,14 @@ public interface ContactRepository extends JpaRepository<ContactEntity, String> 
     List<ContactEntity> findByUserIdAndContactType(String userId, ContactType contactType);
 
     List<ContactEntity> findByCompanyIdAndContactType(String companyId, ContactType contactType);
-}
 
+    /**
+     * Verifica se já existe um contato com o mesmo valor para o usuário.
+     */
+    boolean existsByUserIdAndValue(String userId, String value);
+
+    /**
+     * Verifica se já existe um contato com o mesmo valor para o usuário, excluindo um ID específico.
+     */
+    boolean existsByUserIdAndValueAndIdNot(String userId, String value, String id);
+}

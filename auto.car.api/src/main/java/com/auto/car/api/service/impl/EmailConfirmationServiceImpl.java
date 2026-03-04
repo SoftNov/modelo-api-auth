@@ -149,7 +149,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
             String nomeUsuario = getUserName(user);
 
             // Gera o link de confirmação
-            String linkConfirmacao = confirmationBaseUrl + "?token=" + token;
+            String linkConfirmacao = confirmationBaseUrl + token;
 
             // Substitui as variáveis no template
             String htmlContent = templateParam.getParamValue()

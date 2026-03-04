@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressDto {
-    @JsonIgnore
     private String id;
 
+    @JsonIgnore
     private OwnerType ownerType;
 
     @JsonIgnore
@@ -33,4 +33,3 @@ public class AddressDto {
     @JsonIgnore
     private LocalDateTime createdAt;
 }
-

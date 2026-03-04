@@ -16,10 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ParameterDto {
-
-    @JsonIgnore
     private String id;
-
     private String paramKey;
     private String paramValue;
     private ParameterType paramType;

@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,27 +86,59 @@ public class ParameterController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os parâmetros", description = "Lista todos os parâmetros cadastrados")
+    @Operation(summary = "Listar todos os parâmetros (paginado)",
+               description = "Lista todos os parâmetros cadastrados com paginação. " +
+                           "Parâmetros: page (página, default 0), size (itens por página, default 10), sort (campo de ordenação, default paramKey)")
     @ApiResponse(responseCode = "200", description = "Lista de parâmetros retornada com sucesso")
-    public ResponseEntity<List<ParameterDto>> findAll() {
-        List<ParameterDto> parameters = parameterService.findAll();
+    public ResponseEntity<Page<ParameterDto>> findAll(
+            @io.swagger.v3.oas.annotations.Parameter(description = "Número da página (começa em 0)", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Quantidade de itens por página", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Campo de ordenação", example = "paramKey")
+            @RequestParam(defaultValue = "paramKey") String sort,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Direção da ordenação (asc ou desc)", example = "asc")
+            @RequestParam(defaultValue = "asc") String direction) {
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<ParameterDto> parameters = parameterService.findAllPaged(pageable);
         return ResponseEntity.ok(parameters);
     }
 
     @GetMapping("/active")
-    @Operation(summary = "Listar parâmetros ativos", description = "Lista todos os parâmetros ativos")
+    @Operation(summary = "Listar parâmetros ativos (paginado)", description = "Lista todos os parâmetros ativos com paginação")
     @ApiResponse(responseCode = "200", description = "Lista de parâmetros ativos retornada com sucesso")
-    public ResponseEntity<List<ParameterDto>> findAllActive() {
-        List<ParameterDto> parameters = parameterService.findAllActive();
+    public ResponseEntity<Page<ParameterDto>> findAllActive(
+            @io.swagger.v3.oas.annotations.Parameter(description = "Número da página (começa em 0)", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Quantidade de itens por página", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Campo de ordenação", example = "paramKey")
+            @RequestParam(defaultValue = "paramKey") String sort,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Direção da ordenação (asc ou desc)", example = "asc")
+            @RequestParam(defaultValue = "asc") String direction) {
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<ParameterDto> parameters = parameterService.findAllActivePaged(pageable);
         return ResponseEntity.ok(parameters);
     }
 
     @GetMapping("/category/{category}")
-    @Operation(summary = "Listar parâmetros por categoria", description = "Lista parâmetros de uma categoria específica")
+    @Operation(summary = "Listar parâmetros por categoria (paginado)", description = "Lista parâmetros de uma categoria específica com paginação")
     @ApiResponse(responseCode = "200", description = "Lista de parâmetros da categoria retornada com sucesso")
-    public ResponseEntity<List<ParameterDto>> findByCategory(
-            @io.swagger.v3.oas.annotations.Parameter(description = "Categoria do parâmetro") @PathVariable ParameterCategory category) {
-        List<ParameterDto> parameters = parameterService.findByCategory(category);
+    public ResponseEntity<Page<ParameterDto>> findByCategory(
+            @io.swagger.v3.oas.annotations.Parameter(description = "Categoria do parâmetro") @PathVariable ParameterCategory category,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Número da página (começa em 0)", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Quantidade de itens por página", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Campo de ordenação", example = "paramKey")
+            @RequestParam(defaultValue = "paramKey") String sort,
+            @io.swagger.v3.oas.annotations.Parameter(description = "Direção da ordenação (asc ou desc)", example = "asc")
+            @RequestParam(defaultValue = "asc") String direction) {
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<ParameterDto> parameters = parameterService.findByCategoryPaged(category, pageable);
         return ResponseEntity.ok(parameters);
     }
 

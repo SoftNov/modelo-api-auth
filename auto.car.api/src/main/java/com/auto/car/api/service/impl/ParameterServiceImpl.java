@@ -9,6 +9,8 @@ import com.auto.car.api.repository.ParameterRepository;
 import com.auto.car.api.repository.entity.ParameterEntity;
 import com.auto.car.api.service.ParameterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -105,6 +107,24 @@ public class ParameterServiceImpl implements ParameterService {
         return parameterRepository.findByCategoryAndIsActiveTrue(category).stream()
             .map(entity -> mapper.map(entity, ParameterDto.class))
             .toList();
+    }
+
+    @Override
+    public Page<ParameterDto> findAllPaged(Pageable pageable) {
+        return parameterRepository.findAll(pageable)
+            .map(entity -> mapper.map(entity, ParameterDto.class));
+    }
+
+    @Override
+    public Page<ParameterDto> findAllActivePaged(Pageable pageable) {
+        return parameterRepository.findByIsActiveTrue(pageable)
+            .map(entity -> mapper.map(entity, ParameterDto.class));
+    }
+
+    @Override
+    public Page<ParameterDto> findByCategoryPaged(ParameterCategory category, Pageable pageable) {
+        return parameterRepository.findByCategoryAndIsActiveTrue(category, pageable)
+            .map(entity -> mapper.map(entity, ParameterDto.class));
     }
 
     @Override
